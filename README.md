@@ -1,36 +1,68 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🖥️ DEV.NET | Mission Control
 
-## Getting Started
+### **"Because checking GitHub and Vercel in two different tabs was costing me 4 seconds of my life."**
 
-First, run the development server:
+Welcome to **DEV.NET**, a high-performance, military-grade developer dashboard designed to give you a god-mode view of your repositories, deployments, and code health. It’s built for **Senior Frontend Engineers** who want to look like they’re hacking into the mainframe when they’re actually just checking if their latest CSS tweak broke production.
+
+---
+
+## 🚀 The "Why"
+As a developer, my portfolio is a living organism. Standard GitHub views can feel restrictive when you're managing an ever-expanding list of projects. I built this to synchronize my entire digital footprint into one sleek interface with a **fully transparent mobile header**—ensuring that whether I have 30 repos or 300, the experience remains lightning-fast and visually consistent.
+
+## 🛠️ Tech Stack
+* **Framework:** Next.js 14+ (App Router)
+* **Styling:** Tailwind CSS (The paint job)
+* **Icons:** Lucide React (The shiny bits)
+* **Data Sources:** GitHub API & Vercel API
+* **Context:** Custom Role-Based Context (Recruiter/Tech Lead/Manager)
+
+## ✨ Features
+* **🎭 Role-Based Views:** Toggle between **Recruiter**, **Tech Lead**, and **Manager** modes. It's like a costume party for your career.
+* **🔍 Dynamic Global Search (⌘K):** A custom event-driven search engine that indexes your **entire** repository catalog in real-time. No hardcoded limits, no missed projects.
+* **🚀 Deployment Pipeline:** A professional, emoji-free list of your Vercel builds. It looks so serious your boss will think you're overworking.
+* **📱 Responsive Architecture:**
+  * Mobile-first drawer navigation.
+  * `pt-24` mobile spacing logic for that perfect transparent header gap.
+  * `overflow-x-hidden` safety rails for a smooth mobile experience.
+* **📊 Automated Analytics:** Real-time data fetching for repository counts, star aggregates, and code health percentages.
+
+## 📦 Installation
+
+If you want to run this mission control locally:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+# Clone the mainframe
+git clone [https://github.com/DiptarajSinha/dev-net.git](https://github.com/DiptarajSinha/dev-net.git)
+
+# Enter the terminal
+cd dev-net
+
+# Install the dependencies
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+# Launch the dashboard
+npm run dev
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🔐 Environment Variables
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+To get the data flowing, you must set these up in your `.env.local` or Vercel dashboard:
 
-## Learn More
+| Variable | Description |
+| :--- | :--- |
+| `GITHUB_TOKEN` | Your Personal Access Token (classic or fine-grained) |
+| `VERCEL_TOKEN` | Your Vercel API Access Token |
+| `VERCEL_TEAM_ID` | Your Vercel Team/User slug (e.g., `diptarajsinhas-projects`) |
 
-To learn more about Next.js, take a look at the following resources:
+## 🤝 Contributing
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. **Fork it.**
+2. **Make it better.**
+3. **Submit a PR.**
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 📜 License
 
-## Deploy on Vercel
+MIT. Use it, build it, just don't blame me if you spend more time looking at the dashboard than actually coding.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+**Built with ☕ and high-performance UI principles by [Diptaraj Sinha](https://github.com/DiptarajSinha)**
