@@ -32,7 +32,7 @@ If you want to run this mission control locally:
 
 ```bash
 # Clone the mainframe
-git clone [https://github.com/DiptarajSinha/dev-net.git](https://github.com/DiptarajSinha/dev-net.git)
+git clone [https://github.com/DiptarajSinha/developer-dashboard.git](https://github.com/DiptarajSinha/developer-dashboard.git)
 
 # Enter the terminal
 cd dev-net
