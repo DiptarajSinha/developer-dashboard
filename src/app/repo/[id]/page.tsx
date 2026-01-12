@@ -2,22 +2,29 @@
 
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-// ADDED ExternalLink to imports
-import { ArrowLeft, GitCommit, ShieldAlert, Users, Star, Github, ExternalLink } from 'lucide-react';
+import { useRouter, useParams } from 'next/navigation'; // Added useRouter
+import { 
+  ArrowLeft, GitCommit, ShieldAlert, Users, Star, 
+  Github, ExternalLink, LayoutDashboard, ChevronRight 
+} from 'lucide-react';
 import { LanguageComposition } from '@/components/LanguageComposition';
 import { Sidebar } from '@/components/Sidebar';
 import { BuildTerminal } from '@/components/BuildTerminal';
-import { useParams } from 'next/navigation';
 import { Project } from '@/lib/github';
+import { VercelDeployment } from '@/lib/vercel'; 
 
 export default function RepoDetail() {
   const params = useParams();
+  const router = useRouter(); // Initialize router
   const [project, setProject] = useState<Project | null>(null);
   
   const [languages, setLanguages] = useState<Record<string, number>>({});
   const [terminalData, setTerminalData] = useState<any[]>([]);
+  const [vercelDeployment, setVercelDeployment] = useState<VercelDeployment | null>(null);
   
   const [loading, setLoading] = useState(true);
+
+  const VERCEL_TEAM = 'diptarajsinhas-projects'; 
 
   useEffect(() => {
     async function loadProject() {
@@ -45,6 +52,14 @@ export default function RepoDetail() {
                  }
               })
               .catch(err => console.error("Detail Fetch Error", err));
+            
+             fetch('/api/vercel')
+                .then(r => r.json())
+                .then((deployments: VercelDeployment[]) => {
+                   const found = deployments.find(d => d.name.toLowerCase() === data.name.toLowerCase());
+                   setVercelDeployment(found || null);
+                })
+                .catch(err => console.error("Vercel Fetch Error", err));
           }
         } 
       } catch (error) {
@@ -76,17 +91,28 @@ export default function RepoDetail() {
     );
   }
 
+  const liveUrl = vercelDeployment ? `https://${vercelDeployment.url}` : project.homepage;
+
   return (
-    <div className="min-h-screen bg-[#141414] text-white font-sans">
+    <div className="min-h-screen bg-[#141414] text-white font-sans text-left">
       <Sidebar />
-      <main className="pl-0 md:pl-20 lg:pl-64 transition-all duration-300">
+      <main className="pl-0 md:pl-20 lg:pl-64 pt-10 md:pt-0 transition-all duration-300">
         
-        {/* Back Navigation */}
-        <div className="p-6 pb-0">
-          <Link href="/" className="inline-flex items-center gap-2 text-neutral-400 hover:text-white transition-colors">
-            <ArrowLeft size={20} />
-            <span>Back to Dashboard</span>
-          </Link>
+        {/* Top Navigation & Breadcrumbs */}
+        <div className="p-6 pb-0 space-y-4">
+          <div className="flex items-center gap-2 text-xs font-mono text-neutral-500 uppercase tracking-widest">
+          <Link href="/" className="hover:text-red-500 transition-colors">Dashboard</Link>
+          <ChevronRight size={12} />
+          <span className="text-neutral-300">{project.name}</span>
+        </div>
+
+          <button 
+            onClick={() => router.back()} 
+            className="inline-flex items-center gap-2 text-neutral-400 hover:text-white transition-colors group"
+          >
+            <ArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform" />
+            <span>Go Back</span>
+          </button>
         </div>
 
         <div className="p-6 md:p-10 max-w-7xl mx-auto space-y-8">
@@ -101,16 +127,27 @@ export default function RepoDetail() {
                 <span className="text-neutral-500 font-mono text-sm">Last updated: {project.updated}</span>
               </div>
               <h1 className="text-4xl md:text-5xl font-bold mb-2 break-all">{project.name}</h1>
-              <p className="text-neutral-400 max-w-xl text-lg">
-                A {project.type} project maintained on GitHub.
+              
+              <p className="text-neutral-400 max-w-xl text-lg mt-2">
+                {project.desc || "No description provided for this project."}
               </p>
             </div>
             
-            <div className="flex gap-3">
-               {/* NEW: Conditional Live Demo Button */}
-               {project.homepage && (
+            <div className="flex gap-3 flex-wrap">
+               {vercelDeployment && (
+                  <a 
+                    href={`https://vercel.com/${VERCEL_TEAM}/${project.name}`}
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="bg-neutral-800 text-white px-6 py-3 rounded font-bold flex items-center gap-2 hover:bg-neutral-700 transition-colors border border-neutral-700"
+                  >
+                    <LayoutDashboard size={18} /> Dashboard
+                  </a>
+               )}
+
+               {liveUrl && (
                  <a 
-                   href={project.homepage} 
+                   href={liveUrl} 
                    target="_blank" 
                    rel="noopener noreferrer" 
                    className="bg-red-600 text-white px-6 py-3 rounded font-bold flex items-center gap-2 hover:bg-red-500 transition-colors shadow-[0_0_15px_rgba(220,38,38,0.5)]"
@@ -120,7 +157,7 @@ export default function RepoDetail() {
                )}
 
                <a href={project.url} target="_blank" rel="noopener noreferrer" className="bg-neutral-800 text-white px-6 py-3 rounded font-bold flex items-center gap-2 hover:bg-neutral-700 transition-colors border border-neutral-700">
-                 <Github size={18} /> View on GitHub
+                 <Github size={18} /> GitHub
                </a>
             </div>
           </div>
@@ -128,7 +165,6 @@ export default function RepoDetail() {
           {/* Grid Layout */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             
-            {/* Left Column */}
             <div className="lg:col-span-2 flex flex-col gap-6">
               <div className="min-h-[180px]">
                 <LanguageComposition languages={languages} />
@@ -148,7 +184,6 @@ export default function RepoDetail() {
               </div>
             </div>
 
-            {/* Right Column: Meta Info */}
             <div className="flex flex-col gap-6">
                <div className="bg-neutral-900 border border-neutral-800 rounded-lg p-6">
                 <h3 className="text-neutral-400 text-sm font-medium uppercase tracking-wider mb-4">Tech Stack</h3>
@@ -182,7 +217,6 @@ export default function RepoDetail() {
             </div>
           </div>
 
-          {/* Activity Log */}
           <section className="pt-8 mt-8 border-t border-neutral-800">
              <div className="flex items-center justify-between mb-6">
               <div>

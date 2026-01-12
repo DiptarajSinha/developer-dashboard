@@ -23,6 +23,7 @@ export interface Project {
   branch: string;
   stars: number;
   issues: number;
+  language?: string;
   url: string;
   homepage: string | null; // <--- NEW FIELD
   desc: string;

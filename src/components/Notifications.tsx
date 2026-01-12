@@ -9,15 +9,12 @@ export function Notifications() {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [notifications, setNotifications] = useState<any[]>([]);
 
-  // Calculate unread count
   const unreadCount = notifications.filter(n => !n.read).length;
 
-  // Fetch Real Notifications
   useEffect(() => {
     fetch('/api/notifications')
       .then(res => res.json())
       .then(data => {
-        // Map GitHub notification format to our UI format
         const mapped = Array.isArray(data) ? data.map((n: any) => ({
           id: n.id,
           title: n.subject.title,
@@ -31,7 +28,6 @@ export function Notifications() {
       .catch(err => console.error(err));
   }, []);
 
-  // Close dropdown if clicking outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -53,7 +49,6 @@ export function Notifications() {
 
   return (
     <div className="relative" ref={dropdownRef}>
-      {/* Bell Trigger */}
       <button 
         onClick={() => setIsOpen(!isOpen)}
         className={cn(
@@ -67,11 +62,8 @@ export function Notifications() {
         )}
       </button>
 
-      {/* Dropdown Menu */}
       {isOpen && (
-        <div className="absolute right-0 top-full mt-2 w-80 md:w-96 bg-[#1a1a1a] border border-neutral-800 rounded-xl shadow-2xl overflow-hidden z-50 animate-in fade-in zoom-in-95 duration-200">
-          
-          {/* Header */}
+        <div className="absolute right-[-10px] md:right-0 top-full mt-2 w-[85vw] md:w-96 bg-[#1a1a1a] border border-neutral-800 rounded-xl shadow-2xl overflow-hidden z-50 animate-in fade-in zoom-in-95 duration-200">
           <div className="p-4 border-b border-neutral-800 flex justify-between items-center bg-neutral-900/50">
             <h3 className="font-semibold text-sm text-white">Notifications</h3>
             {unreadCount > 0 && (
@@ -84,7 +76,6 @@ export function Notifications() {
             )}
           </div>
 
-          {/* List */}
           <div className="max-h-[300px] overflow-y-auto">
             {notifications.length === 0 ? (
               <div className="p-8 text-center text-neutral-500 text-xs">
@@ -99,27 +90,22 @@ export function Notifications() {
                     !n.read ? "bg-white/5" : ""
                   )}
                 >
-                  {/* Icon */}
-                  <div className="mt-1">
+                  <div className="mt-1 shrink-0">
                     {n.type === 'error' && <AlertCircle size={16} className="text-red-500" />}
                     {n.type === 'success' && <CheckCircle2 size={16} className="text-green-500" />}
                     {n.type === 'info' && <Star size={16} className="text-yellow-500" />}
                   </div>
 
-                  {/* Content */}
-                  <div className="flex-1">
-                    <h4 className={cn("text-sm font-medium", !n.read ? "text-white" : "text-neutral-400")}>
+                  <div className="flex-1 min-w-0 text-left">
+                    <h4 className={cn("text-sm font-medium truncate", !n.read ? "text-white" : "text-neutral-400")}>
                       {n.title}
                     </h4>
-                    <p className="text-xs text-neutral-500 mt-0.5">{n.desc}</p>
+                    <p className="text-xs text-neutral-500 mt-0.5 truncate">{n.desc}</p>
                     <p className="text-[10px] text-neutral-600 mt-2">{n.time}</p>
                   </div>
 
-                  {/* Unread Dot or Delete */}
-                  <div className="flex flex-col items-end gap-2">
-                    {!n.read && (
-                      <div className="w-1.5 h-1.5 bg-red-600 rounded-full"></div>
-                    )}
+                  <div className="flex flex-col items-end gap-2 shrink-0">
+                    {!n.read && <div className="w-1.5 h-1.5 bg-red-600 rounded-full"></div>}
                     <button 
                       onClick={(e) => deleteNotification(n.id, e)}
                       className="opacity-0 group-hover:opacity-100 text-neutral-600 hover:text-red-500 transition-all"
@@ -132,7 +118,6 @@ export function Notifications() {
             )}
           </div>
           
-          {/* Footer */}
           <div className="p-2 bg-neutral-900 border-t border-neutral-800 text-center">
             <button className="text-xs text-neutral-500 hover:text-white transition-colors w-full py-1">
               View Archive
