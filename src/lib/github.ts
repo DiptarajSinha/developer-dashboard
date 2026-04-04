@@ -1,16 +1,3 @@
-// Define the shape of the raw GitHub API response
-interface GitHubRepo {
-  id: number;
-  name: string;
-  description: string;
-  html_url: string;
-  pushed_at: string;
-  language: string;
-  stargazers_count: number;
-  open_issues_count: number;
-  homepage: string;
-  default_branch: string;
-}
 
 // Define the shape our UI expects
 export interface Project {
@@ -46,7 +33,6 @@ export interface ActivityItem {
   url: string;
 }
 
-// NEW: Interfaces for Notifications & Deployments
 export interface Notification {
   id: string;
   subject: { title: string; type: string; url: string };
@@ -56,20 +42,7 @@ export interface Notification {
   unread: boolean;
 }
 
-export interface Deployment {
-  id: number;
-  sha: string;
-  ref: string;
-  task: string;
-  environment: string;
-  description: string | null;
-  creator: { login: string };
-  created_at: string;
-  updated_at: string;
-  statuses_url: string;
-  repository_url: string;
-  repoName?: string;
-}
+
 
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
 const USERNAME = process.env.GITHUB_USERNAME;
@@ -251,7 +224,6 @@ export async function fetchRepoDetails(repoName: string, branch: string = 'main'
   if (!GITHUB_TOKEN || !USERNAME) return null;
   
   try {
-    const headers = { Authorization: `token ${GITHUB_TOKEN}` };
 
     // A. FETCH RAW COMMITS (Reduced to 5 for Terminal Fallback only)
     const commitsUrl = `https://api.github.com/repos/${USERNAME}/${repoName}/commits?sha=${branch}&per_page=5`;
@@ -281,7 +253,7 @@ export async function fetchRepoDetails(repoName: string, branch: string = 'main'
     })) : [];
 
     // C. Recent Commits (Terminal Fallback)
-    const recentCommits = allCommits.slice(0, 5).map((c: any) => ({
+    const recentCommits = allCommits.map((c: any) => ({
       id: c.sha.substring(0, 7),
       name: "Commit pushed",
       status: "completed",

@@ -1,13 +1,9 @@
 "use client";
 
-
-
 import React, { useEffect, useState } from 'react';
-
+import { useRouter } from 'next/navigation';
 import {
-
   Bell, Terminal, GitPullRequest, Search, Download, Github, Star, Users, Activity, FolderGit, Share2, X, ArrowRight
-
 } from 'lucide-react';
 
 import { Sidebar } from '@/components/Sidebar';
@@ -25,27 +21,24 @@ import { Project, UserStats, ActivityItem } from '@/lib/github';
 import { VercelActivity } from '@/components/VercelActivity';
 
 import { VercelDeployment } from '@/lib/vercel';
-import Link from 'next/link'; // Add this line
+import Link from 'next/link';
 
 
 
 const SectionHeader = ({ title }: { title: string }) => (
 
-  <h2 className="text-xl md:text-2xl font-bold text-white mb-4 mt-8 flex items-center gap-2 group cursor-pointer">
-
+  <Link href="/repo" className="text-xl md:text-2xl font-bold text-white mb-4 mt-8 flex items-center gap-2 group cursor-pointer">
     {title}
-
     <span className="text-red-600 opacity-0 group-hover:opacity-100 transition-opacity text-sm font-medium">Explore All &gt;</span>
-
-  </h2>
+  </Link>
 
 );
 
 
 
 export default function Dashboard() {
-
   const { role } = useRole();
+  const router = useRouter(); // Initialize router
 
 
 
@@ -181,11 +174,11 @@ export default function Dashboard() {
 
       label: "Open for Work",
 
-      title: "Senior Frontend \nEngineer",
+      title: "Frontend \nEngineer",
 
       desc: "Specializing in React, Next.js, and High-Performance UI. Proven track record of delivering scalable web applications.",
 
-      primaryBtn: "Download Resume",
+      primaryBtn: "Download CV",
 
       primaryIcon: Download,
 
@@ -245,7 +238,7 @@ export default function Dashboard() {
 
         <header className="sticky top-0 z-40 bg-[#141414]/90 backdrop-blur-md border-b border-neutral-800 px-6 py-4 flex justify-between items-center">
 
-           <div className="md:hidden text-red-600 font-bold tracking-tighter">DEV.NET</div>
+           <div className="md:hidden flex-1 flex justify-center text-red-600 font-bold tracking-tighter ml-12">DEV.NET</div>
 
            <div className="hidden md:flex flex-1 max-w-md mx-4">
 
@@ -293,39 +286,37 @@ export default function Dashboard() {
 
         <div className="p-6 md:p-10 max-w-7xl mx-auto space-y-8 pb-20">
 
-          {/* 1. Updated section height: h-[300px] on mobile, h-[400px] on desktop */}
           <section className="relative h-[300px] md:h-[400px] rounded-2xl overflow-hidden border border-neutral-800 shadow-2xl">
             <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=2070&auto=format&fit=crop')] bg-cover bg-center opacity-30"></div>
             <div className="absolute inset-0 bg-gradient-to-r from-black via-black/80 to-transparent"></div>
             
-            {/* 2. Updated padding: p-6 on mobile, p-12 on desktop */}
             <div className="relative z-10 h-full flex flex-col justify-center p-6 md:p-12 max-w-2xl">
               
-              {/* 3. Updated margin: mb-2 on mobile, mb-4 on desktop */}
               <div className="flex items-center gap-2 mb-2 md:mb-4">
                 <span className={`${currentHero.alertColor} text-white text-[10px] font-bold px-2 py-1 rounded uppercase tracking-widest`}>
                   {currentHero.label}
                 </span>
               </div>
 
-              {/* 4. Updated Font size: text-2xl on mobile, text-6xl on desktop */}
               <h1 className="text-2xl md:text-6xl font-bold mb-2 md:mb-4 leading-tight whitespace-pre-wrap">
                 {currentHero.title}
               </h1>
 
-              {/* 5. Updated Text size & clamp: text-sm on mobile, text-lg on desktop */}
               <p className="text-neutral-300 mb-6 md:mb-8 max-w-lg text-sm md:text-lg line-clamp-3 md:line-clamp-none">
                 {currentHero.desc}
               </p>
 
-              {/* 6. Updated Button padding: px-4 on mobile, px-6 on desktop */}
               <button 
                 onClick={() => {
-                  if (currentHero.primaryBtn === "Download Resume") {
+                  if (currentHero.primaryBtn === "Download CV") {
                     const link = document.createElement('a');
-                    link.href = '/resume.pdf';
-                    link.download = 'Diptaraj_Sinha_Resume.pdf';
+                    link.href = '/cv-diptaraj-sinha.pdf';
+                    link.download = 'cv-diptaraj-sinha.pdf';
                     link.click();
+                  } else if (currentHero.primaryBtn === "View Repo" && latestProject) {
+                    router.push(`/repo/${latestProject.id}`);
+                  } else if (currentHero.primaryBtn === "View Architecture") {
+                    router.push('/repo');
                   }
                 }}
                 className="bg-white text-black hover:bg-neutral-200 px-4 md:px-6 py-2 md:py-3 rounded font-bold flex items-center gap-2 transition-colors w-fit text-sm"
@@ -337,7 +328,7 @@ export default function Dashboard() {
 
 
 
-          <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
             {REAL_ANALYTICS.map((stat) => (
               stat.label === "Total Repositories" ? (
                 <Link href="/repo" key={stat.label} className="block cursor-pointer">
@@ -410,7 +401,6 @@ export default function Dashboard() {
                             <div className="p-2 bg-neutral-800 rounded-full text-blue-500"><GitPullRequest size={20} /></div>
 
                             <div>
-
                               <h4 className="text-sm font-medium text-white group-hover:text-blue-500 transition-colors">{pr.title}</h4>
 
                               <p className="text-xs text-neutral-500">#{pr.number} in {pr.repo} • {pr.state}</p>

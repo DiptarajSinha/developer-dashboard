@@ -2,31 +2,23 @@
 
 
 
-import { Terminal, LayoutDashboard, Github, Globe, Box, Settings, Check, ChevronDown } from 'lucide-react';
-
+import { Terminal, LayoutDashboard, Github, Globe, Box, Settings, Check, ChevronDown, Menu as MenuIcon, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
-
-import { useState } from 'react';
-
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
-
-import { usePathname } from 'next/navigation'; // 1. Import this hook
-
+import { usePathname } from 'next/navigation';
 import { useRole } from '@/lib/role-context';
 
-
-
 export function Sidebar() {
+  const [isOpen, setIsOpen] = useState(false);
 
   const { role, setRole } = useRole();
 
   const [isRoleMenuOpen, setIsRoleMenuOpen] = useState(false);
 
-  const pathname = usePathname(); // 2. Get current path
+  const pathname = usePathname();
 
 
-
-  // 3. Add 'href' to your menu items
 
   const menuItems = [
 
@@ -54,15 +46,41 @@ export function Sidebar() {
 
 
 
-  return (
+  // Close sidebar on navigation (mobile)
+  useEffect(() => {
+    setIsOpen(false);
+  }, [pathname]);
 
-    <div className="hidden md:flex flex-col w-20 lg:w-64 bg-black border-r border-neutral-800 h-screen fixed left-0 top-0 z-50">
+  return (
+    <>
+      {/* Mobile Toggle Button (Floating) */}
+      <button 
+        onClick={() => setIsOpen(!isOpen)}
+        className="md:hidden fixed top-4 left-4 z-[60] p-2 bg-red-600 text-white rounded-full shadow-lg shadow-red-900/40"
+      >
+        {isOpen ? <X size={20} /> : <MenuIcon size={20} />}
+      </button>
+
+      {/* Overlay for mobile drawer */}
+      {isOpen && (
+        <div 
+          className="md:hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-[45]"
+          onClick={() => setIsOpen(false)}
+        />
+      )}
+
+      <div className={cn(
+        "flex flex-col bg-black border-r border-neutral-800 h-screen fixed left-0 top-0 z-50 transition-transform duration-300",
+        "w-20 lg:w-64",
+        "md:translate-x-0", // Visible on desktop
+        isOpen ? "translate-x-0 w-64" : "-translate-x-full md:translate-x-0" // Drawer logic
+      )}>
 
       <Link href="/" className="p-6 flex items-center gap-3 text-red-600 hover:opacity-80 transition-opacity">
 
         <Terminal size={32} />
 
-        <span className="text-xl font-bold tracking-tighter text-white hidden lg:block">DEV.NET</span>
+        <span className={cn("text-xl font-bold tracking-tighter text-white", isOpen ? "block" : "hidden lg:block")}>DEV.NET</span>
 
       </Link>
 
@@ -70,7 +88,7 @@ export function Sidebar() {
 
       {/* ROLE SWITCHER */}
 
-      <div className="px-4 mb-4 hidden lg:block">
+      <div className={cn("px-4 mb-4", isOpen ? "block" : "hidden lg:block")}>
 
         <div className="text-xs font-semibold text-neutral-500 uppercase tracking-wider mb-2 px-2">
 
@@ -140,7 +158,6 @@ export function Sidebar() {
 
         {menuItems.map((item) => {
 
-          // 4. Check if this item is active
 
           const isActive = pathname === item.href;
 
@@ -170,7 +187,7 @@ export function Sidebar() {
 
               <item.icon size={20} />
 
-              <span className="hidden lg:block font-medium">{item.label}</span>
+              <span className={cn("font-medium", isOpen ? "block" : "hidden lg:block")}>{item.label}</span>
 
             </Link>
 
@@ -200,7 +217,7 @@ export function Sidebar() {
 
             <Settings size={20} />
 
-            <span className="hidden lg:block">Settings</span>
+            <span className={cn(isOpen ? "block" : "hidden lg:block")}>Settings</span>
 
           </button>
 
@@ -209,7 +226,6 @@ export function Sidebar() {
       </div>
 
     </div>
-
+    </>
   );
-
 }

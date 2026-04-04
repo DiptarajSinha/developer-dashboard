@@ -91,6 +91,7 @@ export default function RepoDetail() {
     );
   }
 
+  const isVercel = !!(vercelDeployment || (project.homepage && project.homepage.includes('.vercel.app')));
   const liveUrl = vercelDeployment ? `https://${vercelDeployment.url}` : project.homepage;
 
   return (
@@ -134,17 +135,6 @@ export default function RepoDetail() {
             </div>
             
             <div className="flex gap-3 flex-wrap">
-               {vercelDeployment && (
-                  <a 
-                    href={`https://vercel.com/${VERCEL_TEAM}/${project.name}`}
-                    target="_blank" 
-                    rel="noopener noreferrer" 
-                    className="bg-neutral-800 text-white px-6 py-3 rounded font-bold flex items-center gap-2 hover:bg-neutral-700 transition-colors border border-neutral-700"
-                  >
-                    <LayoutDashboard size={18} /> Dashboard
-                  </a>
-               )}
-
                {liveUrl && (
                  <a 
                    href={liveUrl} 
@@ -154,6 +144,17 @@ export default function RepoDetail() {
                  >
                    <ExternalLink size={18} /> Live Demo
                  </a>
+               )}
+
+               {isVercel && (
+                  <a 
+                    href={`https://vercel.com/${VERCEL_TEAM}/${project.name}`}
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="bg-neutral-800 text-white px-6 py-3 rounded font-bold flex items-center gap-2 hover:bg-neutral-700 transition-colors border border-neutral-700"
+                  >
+                    <LayoutDashboard size={18} /> Vercel
+                  </a>
                )}
 
                <a href={project.url} target="_blank" rel="noopener noreferrer" className="bg-neutral-800 text-white px-6 py-3 rounded font-bold flex items-center gap-2 hover:bg-neutral-700 transition-colors border border-neutral-700">

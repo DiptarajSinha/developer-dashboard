@@ -8,8 +8,10 @@ export function StatCard({ label, value, trend }: Stat) {
       <div className="flex items-end justify-between">
         <span className="text-3xl font-bold text-white group-hover:scale-105 transition-transform origin-left">{value}</span>
         <span className={cn(
-          "text-sm font-medium px-2 py-1 rounded bg-opacity-10",
-          trend.startsWith('+') ? "text-green-500 bg-green-500" : "text-red-500 bg-red-500"
+          "text-xs font-bold px-2 py-1 rounded bg-neutral-800 border border-neutral-700",
+          trend.startsWith('+') ? "text-green-500 border-green-500/30" : 
+          trend.startsWith('-') ? "text-red-500 border-red-500/30" : 
+          "text-blue-500 border-blue-500/30"
         )}>
           {trend}
         </span>
